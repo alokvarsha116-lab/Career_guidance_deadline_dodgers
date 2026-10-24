@@ -20,11 +20,11 @@
   <div class="space-y-6">
     <!-- AI Intro Message Bubble -->
     <div class="flex items-start gap-3">
-      <div class="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm font-bold flex-shrink-0">
+      <div class="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm font-bold flex-shrink-0 shadow-sm">
         AI
       </div>
-      <div class="bg-white p-4 rounded-2xl rounded-tl-none shadow-sm border border-slate-100 max-w-xl text-sm leading-relaxed text-slate-700">
-        <p class="font-medium text-slate-900 mb-1">Hello! I am your AI Career Counselor.</p>
+      <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl rounded-tl-none shadow-sm border border-slate-100 dark:border-slate-700 max-w-xl text-sm leading-relaxed text-slate-700 dark:text-slate-200">
+        <p class="font-semibold text-slate-900 dark:text-slate-100 mb-1">Hello! I am your AI Career Counselor.</p>
         <p>Tell me a bit about what you enjoy inside and outside of school. I'll evaluate multiple pathways and suggest the right stream and next steps for you!</p>
       </div>
     </div>
@@ -33,13 +33,13 @@
     <form hx-post="/chat/evaluate" 
           hx-target="#chat-result-container" 
           hx-swap="innerHTML"
-          class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
+          class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 space-y-4">
       
       <!-- Grade & Marks -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label class="block text-xs font-bold text-slate-600 uppercase mb-1">1. Your Current Grade</label>
-          <select name="grade" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500">
+          <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase mb-1">1. Your Current Grade</label>
+          <select name="grade" class="w-full bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
             <option value="9th">Class 9th</option>
             <option value="10th" selected>Class 10th</option>
             <option value="11th">Class 11th</option>
@@ -47,8 +47,8 @@
           </select>
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-600 uppercase mb-1">2. Academic Consistency</label>
-          <select name="marks" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500">
+          <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase mb-1">2. Academic Consistency</label>
+          <select name="marks" class="w-full bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
             <option value="High">High (Comfortable with theory)</option>
             <option value="Average" selected>Average (Consistent effort)</option>
             <option value="Developing">Developing (Needs practical engagement)</option>
@@ -58,24 +58,24 @@
 
       <!-- Favorite Subjects -->
       <div>
-        <label class="block text-xs font-bold text-slate-600 uppercase mb-1">3. Favorite Subjects</label>
+        <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase mb-1">3. Favorite Subjects</label>
         <input type="text" name="favorite_subjects" required
                placeholder="e.g., Math, Computer Science, Biology, History, Economics"
-               class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500">
+               class="w-full bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
       </div>
 
       <!-- Free-time passion -->
       <div>
-        <label class="block text-xs font-bold text-slate-600 uppercase mb-1">4. Free-Time Curiosity & Hobbies</label>
+        <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase mb-1">4. Free-Time Curiosity & Hobbies</label>
         <input type="text" name="free_time_activity" required
                placeholder="e.g., Coding apps, reading articles, sketching, debating, building models"
-               class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500">
+               class="w-full bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
       </div>
 
       <!-- Learning Style -->
       <div>
-        <label class="block text-xs font-bold text-slate-600 uppercase mb-1">5. Preferred Learning Style</label>
-        <select name="learning_style" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500">
+        <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase mb-1">5. Preferred Learning Style</label>
+        <select name="learning_style" class="w-full bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
           <option value="Hands-on problem solving">Hands-on problem solving (Logic, coding, building)</option>
           <option value="Deep theoretical reading">Deep theoretical reading (Research, concepts)</option>
           <option value="Practical communication">Practical communication (Debate, writing, people)</option>
@@ -85,15 +85,15 @@
       <!-- Flexibility & Lifestyle -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label class="block text-xs font-bold text-slate-600 uppercase mb-1">6. Career Flexibility</label>
-          <select name="flexibility_pref" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500">
+          <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase mb-1">6. Career Flexibility</label>
+          <select name="flexibility_pref" class="w-full bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
             <option value="Flexible">Flexible (Can switch fields later)</option>
             <option value="Specialized">Specialized (Deep single track e.g., MBBS/Engg)</option>
           </select>
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-600 uppercase mb-1">7. Work Lifestyle</label>
-          <select name="work_lifestyle" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500">
+          <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase mb-1">7. Work Lifestyle</label>
+          <select name="work_lifestyle" class="w-full bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
             <option value="High-intensity corporate/tech">High-intensity corporate/tech</option>
             <option value="Steady healthcare/public service">Steady healthcare/public service</option>
             <option value="Creative and independent studio">Creative & independent studio</option>
@@ -102,7 +102,7 @@
       </div>
 
       <button type="submit" 
-              class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition flex items-center justify-center gap-2 shadow-md shadow-indigo-100">
+              class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition flex items-center justify-center gap-2 shadow-md shadow-indigo-600/20">
         <span>⚡ Run 5-Dimension Evaluation</span>
       </button>
     </form>
