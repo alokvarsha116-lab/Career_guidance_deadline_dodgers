@@ -1,0 +1,45 @@
+<div class="space-y-4 my-4 animate-fade-in">
+  <!-- User Question Bubble (Right) -->
+  <div class="flex items-start justify-end gap-2.5">
+    <div class="bg-indigo-600 text-white p-3.5 rounded-2xl rounded-tr-none max-w-lg text-sm shadow-sm">
+      <div class="text-[10px] text-indigo-200 font-bold uppercase mb-0.5">You asked</div>
+      <div>{{ query }}</div>
+    </div>
+    <div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 flex items-center justify-center text-xs font-bold shrink-0">
+      👤
+    </div>
+  </div>
+
+  <!-- AI Dual-Model Response Bubble (Left) -->
+  <div class="flex items-start gap-2.5">
+    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-600 text-white flex items-center justify-center text-xs font-bold shrink-0 shadow-md">
+      AI
+    </div>
+    <div class="bg-white dark:bg-slate-800 p-4 sm:p-5 rounded-2xl rounded-tl-none shadow-md border border-slate-100 dark:border-slate-700 max-w-xl text-sm text-slate-800 dark:text-slate-200 space-y-3">
+      <div class="flex items-center justify-between text-xs border-b border-slate-100 dark:border-slate-700 pb-2">
+        <span class="font-bold text-indigo-600 dark:text-indigo-400 flex items-center gap-1">
+          <span>⚡</span> Dual-Model Counselor
+        </span>
+        <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 font-semibold border border-emerald-200 dark:border-emerald-800">
+          Audited & Verified
+        </span>
+      </div>
+
+      <!-- Rendered Answer -->
+      <div class="prose prose-sm dark:prose-invert max-w-none leading-relaxed whitespace-pre-line">
+        {{ answer }}
+      </div>
+
+      {% if critic_audit %}
+      <!-- Model 2 Quality Audit Callout -->
+      <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-400 flex items-start gap-2">
+        <span class="text-sm">⚖️</span>
+        <div>
+          <span class="font-bold text-slate-700 dark:text-slate-300">Model 2 (Critic & Senior Auditor):</span>
+          <div class="text-[11px] mt-0.5">{{ critic_audit }}</div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>

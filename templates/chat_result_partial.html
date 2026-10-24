@@ -1,126 +1,240 @@
-<!-- Response Bubble -->
-<div class="flex items-start gap-3 mt-6 animate-fade-in">
-  <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-600 text-white flex items-center justify-center text-sm font-bold flex-shrink-0 shadow-md">
-    AI
-  </div>
+<!-- Response Container -->
+<div class="mt-8 space-y-6 animate-fade-in">
 
-  <div class="bg-white dark:bg-slate-800 p-6 sm:p-7 rounded-2xl rounded-tl-none shadow-lg border border-indigo-100 dark:border-slate-700 w-full space-y-6">
-    
-    <!-- Header -->
-    <div class="border-b border-slate-100 dark:border-slate-700 pb-4">
-      <div class="flex items-center justify-between flex-wrap gap-2">
-        <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider flex items-center gap-1.5">
-          <span>🎯</span> Personalized Evaluation Report
-        </span>
-        <span class="text-[11px] bg-green-50 dark:bg-emerald-950/50 text-green-700 dark:text-emerald-300 font-semibold px-2.5 py-0.5 rounded-full border border-green-200 dark:border-emerald-800">
-          Tailored for Class {{ inputs.grade }}
+  <!-- AI Agent Identity Header -->
+  <div class="flex items-start gap-3">
+    <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-600 text-white flex items-center justify-center text-lg font-bold shrink-0 shadow-lg shadow-indigo-600/30">
+      🤖
+    </div>
+    <div>
+      <div class="flex items-center gap-2 flex-wrap">
+        <h2 class="text-base font-bold text-slate-900 dark:text-slate-100">AI Dual-Model Career Assessment</h2>
+        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
+          Model 1 Generator + Model 2 Critic Refiner
         </span>
       </div>
+      <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+        Multi-dimensional profile processed across 10 vectors &amp; verified against 1,245 database careers.
+      </p>
+    </div>
+  </div>
 
-      <!-- Why it fits you -->
-      <div class="mt-3 bg-indigo-50/70 dark:bg-indigo-950/40 p-4 rounded-xl border border-indigo-100 dark:border-indigo-900/40 text-sm text-slate-700 dark:text-slate-200 leading-relaxed">
-        <strong class="text-indigo-900 dark:text-indigo-200 font-bold block mb-1">💡 Why this fits you:</strong>
-        {{ evaluation.why_text | safe }}
+  <!-- Main Result Card -->
+  <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200/80 dark:border-slate-700/80 space-y-7">
+
+    <!-- 1. Executive Synthesis &amp; Match Scores -->
+    <div class="border-b border-slate-100 dark:border-slate-700/80 pb-6">
+      <div class="flex items-center justify-between flex-wrap gap-3 mb-4">
+        <div>
+          <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider flex items-center gap-1.5">
+            <span>🎯</span> Comprehensive Profile Synthesis
+          </span>
+          <div class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            Tailored specifically for Class {{ inputs.grade }} • Budget: {{ inputs.budget_tier }}
+          </div>
+        </div>
+
+        <!-- Composite Score Badge -->
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-950/60 dark:to-purple-950/60 border border-indigo-200/80 dark:border-indigo-800/80">
+          <span class="text-xl">🏆</span>
+          <div>
+            <div class="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 leading-none">Composite Fit</div>
+            <div class="text-base font-extrabold text-indigo-600 dark:text-indigo-400">{{ evaluation.scores.overall_match }}% Match</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Synthesis Text -->
+      <p class="text-sm text-slate-700 dark:text-slate-200 leading-relaxed bg-slate-50 dark:bg-slate-900/60 p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700">
+        {{ evaluation.synthesis }}
+      </p>
+
+      <!-- Tri-Factor Confidence Scores Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4">
+
+        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/40 border border-slate-200/60 dark:border-slate-700 text-center">
+          <div class="text-[11px] font-bold text-slate-500 dark:text-slate-400">Aptitude Alignment</div>
+          <div class="text-lg font-black text-indigo-600 dark:text-indigo-400 mt-0.5">{{ evaluation.scores.aptitude_fit }}%</div>
+          <div class="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full mt-1.5 overflow-hidden">
+            <div class="bg-indigo-600 h-full rounded-full score-bar" data-pct="{{ evaluation.scores.aptitude_fit }}"></div>
+          </div>
+        </div>
+
+        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/40 border border-slate-200/60 dark:border-slate-700 text-center">
+          <div class="text-[11px] font-bold text-slate-500 dark:text-slate-400">ROI &amp; Budget Viability</div>
+          <div class="text-lg font-black text-emerald-600 dark:text-emerald-400 mt-0.5">{{ evaluation.scores.roi_feasibility }}%</div>
+          <div class="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full mt-1.5 overflow-hidden">
+            <div class="bg-emerald-600 h-full rounded-full score-bar" data-pct="{{ evaluation.scores.roi_feasibility }}"></div>
+          </div>
+        </div>
+
+        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/40 border border-slate-200/60 dark:border-slate-700 text-center">
+          <div class="text-[11px] font-bold text-slate-500 dark:text-slate-400">Future AI Resilience</div>
+          <div class="text-lg font-black text-purple-600 dark:text-purple-400 mt-0.5">{{ evaluation.scores.future_proof }}%</div>
+          <div class="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full mt-1.5 overflow-hidden">
+            <div class="bg-purple-600 h-full rounded-full score-bar" data-pct="{{ evaluation.scores.future_proof }}"></div>
+          </div>
+        </div>
+
       </div>
     </div>
 
-    <!-- Recommended Stream -->
-    <div class="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-950/40 dark:to-purple-950/40 p-5 rounded-xl border border-indigo-200 dark:border-indigo-900/50">
-      <div class="text-xs font-bold text-indigo-900 dark:text-indigo-300 uppercase tracking-wider">
-        1️⃣ Recommended Stream Choice
+    <!-- 2. Dual-Model Self-Correction Breakdown -->
+    <div class="p-4 sm:p-5 rounded-2xl bg-indigo-50/50 dark:bg-indigo-950/30 border border-indigo-100 dark:border-indigo-900/50 space-y-3">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-bold uppercase tracking-wider text-indigo-900 dark:text-indigo-300 flex items-center gap-1.5">
+          <span>⚖️</span> Model 2 Quality Audit &amp; Self-Refinement Log
+        </span>
+        <span class="text-[10px] text-indigo-600 dark:text-indigo-400 font-semibold bg-white dark:bg-slate-800 px-2 py-0.5 rounded-md border border-indigo-200 dark:border-indigo-800">
+          Negative Constraints Enforced
+        </span>
       </div>
-      <div class="text-lg font-black text-indigo-800 dark:text-indigo-200 mt-1">
+      <div class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed space-y-2">
+        {% for note in evaluation.model_2_critiques %}
+        <div class="p-2.5 rounded-xl bg-white dark:bg-slate-800/90 border border-indigo-100/80 dark:border-indigo-900/40">
+          {{ note | safe }}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- 3. Primary Recommended Pathway -->
+    <div class="bg-gradient-to-br from-indigo-600 to-purple-700 text-white p-6 rounded-2xl shadow-lg shadow-indigo-600/20">
+      <div class="text-xs uppercase font-bold tracking-wider text-indigo-200 flex items-center gap-1.5 mb-1">
+        <span>🚀</span> Recommended Academic Stream
+      </div>
+      <div class="text-xl sm:text-2xl font-black tracking-tight mb-2">
         {{ evaluation.stream }}
       </div>
-      <p class="text-xs text-indigo-950/80 dark:text-indigo-300/80 mt-1.5 font-medium">
-        {{ evaluation.marks_advice }}
+      <p class="text-xs text-indigo-100/90 leading-relaxed">
+        Optimized to maximize admission probabilities while eliminating friction with subjects you dislike.
       </p>
     </div>
 
-    <!-- Top Matching Careers from your Database -->
-    <div>
-      <div class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3">
-        2️⃣ Top Matching Careers From Our Database (Click to Explore)
+    <!-- 4. Undergraduate Degrees &amp; Entrance Exams Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div class="bg-slate-50 dark:bg-slate-900/60 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-700">
+        <div class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+          <span>🏛️</span> Recommended Undergraduate Degrees
+        </div>
+        <p class="text-sm font-bold text-slate-800 dark:text-slate-100 leading-relaxed">
+          {{ evaluation.degrees }}
+        </p>
       </div>
+      <div class="bg-slate-50 dark:bg-slate-900/60 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-700">
+        <div class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+          <span>📝</span> Key Entrance Examinations
+        </div>
+        <p class="text-sm font-bold text-slate-800 dark:text-slate-100 leading-relaxed">
+          {{ evaluation.exams }}
+        </p>
+      </div>
+    </div>
 
-      {% if evaluation.top_careers %}
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+    <!-- 5. Top Matching Database Careers -->
+    <div class="space-y-3">
+      <div class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+        <span>💼</span> Top Database Careers Matching Your Vector (Click to Explore Full Roadmap)
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
         {% for c in evaluation.top_careers %}
-        <a href="/career/{{ c.id }}" 
-           class="p-4 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-md bg-slate-50 dark:bg-slate-900/60 hover:bg-white dark:hover:bg-slate-800 transition group flex flex-col justify-between">
-          <div>
+        <a href="/career/{{ c.id }}"
+           class="p-4 rounded-2xl border border-slate-200/80 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800 hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-md transition group flex flex-col justify-between">
+          <div class="space-y-1.5">
             <div class="flex items-start justify-between gap-2">
-              <span class="font-bold text-slate-800 dark:text-slate-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 text-sm leading-snug">
+              <span class="font-bold text-sm text-slate-800 dark:text-slate-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition leading-snug">
                 {{ c.name }}
               </span>
               <span class="text-[11px] bg-indigo-100 dark:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 font-bold px-2 py-0.5 rounded-full shrink-0">
-                {{ c.score }}% Match
+                {{ c.score }}% Fit
               </span>
             </div>
-            
             {% if c.summary %}
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">{{ c.summary }}</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
+              {{ c.summary }}
+            </p>
             {% endif %}
+            <div class="flex flex-wrap gap-1 pt-1">
+              {% for tag in c.tags %}
+              <span class="text-[10px] px-2 py-0.5 rounded-md bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700">
+                #{{ tag }}
+              </span>
+              {% endfor %}
+            </div>
           </div>
-
-          <div class="mt-3 pt-2 border-t border-slate-200/60 dark:border-slate-700 flex items-center justify-between text-xs text-indigo-600 dark:text-indigo-400 font-medium">
-            <span>View Full Career Profile</span>
+          <div class="mt-3.5 pt-2.5 border-t border-slate-200/60 dark:border-slate-700 flex items-center justify-between text-xs text-indigo-600 dark:text-indigo-400 font-semibold">
+            <span>Explore Syllabus &amp; Salaries</span>
             <span class="group-hover:translate-x-1 transition">→</span>
           </div>
         </a>
         {% endfor %}
       </div>
-      {% else %}
-      <p class="text-xs text-slate-500 dark:text-slate-400">Explore our categories catalog for additional specialized careers.</p>
-      {% endif %}
     </div>
 
-    <!-- Entrance Exams & Degrees -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-      <div class="bg-slate-50 dark:bg-slate-900/60 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
-        <span class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">
-          📝 Target Entrance Exams
-        </span>
-        <p class="text-sm font-bold text-slate-800 dark:text-slate-100 leading-snug">
-          {{ evaluation.exams }}
-        </p>
+    <!-- 6. Immediate 30-Day Action Plan -->
+    <div class="bg-slate-50 dark:bg-slate-900/60 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-700 space-y-3">
+      <div class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+        <span>⚡</span> Immediate 30-Day Actionable Milestones
       </div>
-
-      <div class="bg-slate-50 dark:bg-slate-900/60 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
-        <span class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">
-          🏛️ Recommended Undergraduate Degrees
-        </span>
-        <p class="text-sm font-semibold text-slate-800 dark:text-slate-100 leading-snug">
-          {{ evaluation.degrees }}
-        </p>
-      </div>
-    </div>
-
-    <!-- Next Steps -->
-    <div class="bg-slate-50 dark:bg-slate-900/60 p-4 sm:p-5 rounded-xl border border-slate-200 dark:border-slate-700">
-      <div class="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
-        🚀 Next Steps for Class {{ inputs.grade }}
-      </div>
-      <ul class="space-y-1.5 text-sm text-slate-700 dark:text-slate-300">
-        {% for step in evaluation.next_steps %}
-        <li class="flex items-start gap-2">
-          <span class="text-indigo-600 dark:text-indigo-400 font-bold">✓</span>
+      <ul class="space-y-2">
+        {% for step in evaluation.immediate_plan %}
+        <li class="flex items-start gap-2.5 text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
+          <span class="w-5 h-5 rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold shrink-0 text-[11px]">
+            {{ loop.index }}
+          </span>
           <span>{{ step | safe }}</span>
         </li>
         {% endfor %}
       </ul>
     </div>
 
-    <!-- Advice for Parents & Teachers -->
-    <div class="bg-amber-50/90 dark:bg-amber-950/40 p-4 rounded-xl border border-amber-200 dark:border-amber-900/40 text-xs text-amber-950 dark:text-amber-200 flex items-start gap-3">
-      <span class="text-base">👨‍👩‍👧‍👦</span>
+    <!-- 7. Discussion Guide for Parents &amp; Teachers -->
+    <div class="bg-amber-50/80 dark:bg-amber-950/30 p-4 sm:p-5 rounded-2xl border border-amber-200/80 dark:border-amber-900/40 flex items-start gap-3">
+      <span class="text-xl">👪</span>
       <div>
-        <strong class="font-bold text-amber-900 dark:text-amber-300 block mb-0.5">Discussion Guide for Parents & Teachers:</strong>
-        <p class="leading-relaxed text-amber-900/90 dark:text-amber-200/90">
-          This recommendation respects the student's genuine aptitude in {{ inputs.favorite_subjects.title() }} and {{ inputs.free_time_activity.title() }}. High marks in 10th grade science should not force a student into PCM if their natural strengths lie in economics, law, or management.
+        <h4 class="text-xs font-bold text-amber-900 dark:text-amber-300 uppercase tracking-wider mb-1">
+          Discussion Guide for Parents &amp; Counselors
+        </h4>
+        <p class="text-xs text-amber-900/90 dark:text-amber-200/90 leading-relaxed">
+          {{ evaluation.discussion_guide }}
         </p>
       </div>
     </div>
 
   </div>
+
+  <!-- 8. Interactive Follow-Up Chat Box -->
+  <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-xl border border-slate-200/80 dark:border-slate-700/80">
+    <div class="flex items-center gap-2 mb-3">
+      <span class="text-lg">💬</span>
+      <div>
+        <h3 class="text-sm font-bold text-slate-900 dark:text-slate-100">Have Follow-Up Questions?</h3>
+        <p class="text-xs text-slate-500 dark:text-slate-400">Ask anything: tuition fees, college selection, BCA vs B.Tech, or backup entrance options.</p>
+      </div>
+    </div>
+
+    <div id="followup-thread" class="space-y-3 mb-4"></div>
+
+    <form hx-post="/chat/message"
+          hx-target="#followup-thread"
+          hx-swap="beforeend"
+          hx-on--after-request="this.reset()"
+          class="flex items-center gap-2">
+      <input type="text" name="message" required
+             placeholder="e.g., What if I can't afford private engineering colleges? Can I switch after 1st year?"
+             class="flex-1 px-4 py-3 text-sm rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+      <button type="submit"
+              class="px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-md shadow-indigo-600/20 shrink-0">
+        <span>Ask AI</span>
+        <span>→</span>
+      </button>
+    </form>
+  </div>
+
 </div>
+
+<script>
+  document.querySelectorAll('.score-bar').forEach(function(el) {
+    el.style.width = (el.getAttribute('data-pct') || '0') + '%';
+  });
+</script>
