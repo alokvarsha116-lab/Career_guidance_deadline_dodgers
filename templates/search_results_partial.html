@@ -4,8 +4,8 @@
     <div class="text-sm text-slate-600">
       Found <span class="font-bold text-indigo-600">{{ total_matches }}</span> careers matching "<span class="font-semibold text-slate-800">{{ query }}</span>"
     </div>
-    <button onclick="clearSearch()" class="text-xs text-indigo-600 hover:text-indigo-800 font-semibold flex items-center gap-1">
-      <span>✕</span> Clear search & show all categories
+    <button type="button" onclick="clearSearch()" class="text-xs text-indigo-600 hover:text-indigo-800 font-semibold flex items-center gap-1 cursor-pointer">
+      <span>✕</span> Clear search
     </button>
   </div>
 
@@ -27,7 +27,7 @@
         <p class="text-xs text-slate-500 line-clamp-2 mb-3">{{ career.summary }}</p>
         {% endif %}
 
-        <!-- Tags Display with Matched Tags Highlighted -->
+        <!-- Tags Display -->
         <div class="flex flex-wrap gap-1.5 mt-2">
           {% for tag in career.tags[:6] %}
             {% if tag in item.matched_tags %}
@@ -61,9 +61,29 @@
       <p class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
         Try searching for broader tags like <code>coding</code>, <code>biology</code>, <code>maths</code>, <code>design</code>, or <code>finance</code>.
       </p>
-      <button onclick="clearSearch()" class="mt-4 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg transition">
+      <button type="button" onclick="clearSearch()" class="mt-4 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg transition cursor-pointer">
         Reset Search
       </button>
     </div>
   {% endif %}
+
+{% else %}
+  <!-- Automatically restored when search box is empty! -->
+  {% for c in categories %}
+  <a href="/category/{{ c.id }}"
+     class="group rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-lg border border-slate-100 hover:border-indigo-200 transition duration-200 flex flex-col justify-between">
+    <div class="h-32 bg-gradient-to-br from-indigo-500 to-purple-600 overflow-hidden relative">
+      <img src="/static/img/{{ c.image }}" alt="{{ c.name }}" loading="lazy"
+           onerror="this.remove()"
+           class="h-full w-full object-cover group-hover:scale-105 transition duration-300">
+    </div>
+    <div class="p-4">
+      <div class="font-semibold text-slate-900 leading-snug group-hover:text-indigo-600 transition">{{ c.name }}</div>
+      <div class="text-xs text-slate-500 mt-1 flex items-center justify-between">
+        <span>{{ c.groups | map(attribute='career_ids') | map('length') | sum }} careers</span>
+        <span class="text-indigo-500 font-bold opacity-0 group-hover:opacity-100 transition">→</span>
+      </div>
+    </div>
+  </a>
+  {% endfor %}
 {% endif %}

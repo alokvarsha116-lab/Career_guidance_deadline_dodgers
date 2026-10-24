@@ -86,12 +86,12 @@
     htmx.trigger(input, 'keyup');
     input.focus();
   }
-
   function clearSearch() {
     const input = document.getElementById('search-input');
     input.value = '';
-    // Reload default home page view
-    htmx.ajax('GET', '/', {target: '#results-container', select: '#results-container > *'});
+    // Triggers search with empty string -> restores categories immediately!
+    htmx.trigger(input, 'keyup');
+    input.focus();
   }
 </script>
 {% endblock %}

@@ -184,14 +184,28 @@ def home(request: Request):
 @app.get("/search", response_class=HTMLResponse)
 def search_careers(request: Request, q: str = ""):
     query = q.strip()
-    results = store.search_careers_by_tags(query) if query else []
     
+    # If the user deleted what they typed, return all categories!
+    if not query:
+        return templates.TemplateResponse(
+            request,
+            "search_results_partial.html",
+            {
+                "query": "",
+                "results": [],
+                "total_matches": 0,
+                "categories": store.categories()
+            }
+        )
+    
+    results = store.search_careers_by_tags(query)
     return templates.TemplateResponse(
         request,
         "search_results_partial.html",
         {
             "query": query,
             "results": results,
-            "total_matches": len(results)
+            "total_matches": len(results),
+            "categories": []
         }
     )
