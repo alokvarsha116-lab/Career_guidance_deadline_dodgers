@@ -1,0 +1,69 @@
+{% if query %}
+  <!-- Search Summary Header -->
+  <div class="col-span-full flex items-center justify-between mb-2 pb-3 border-b border-slate-200">
+    <div class="text-sm text-slate-600">
+      Found <span class="font-bold text-indigo-600">{{ total_matches }}</span> careers matching "<span class="font-semibold text-slate-800">{{ query }}</span>"
+    </div>
+    <button onclick="clearSearch()" class="text-xs text-indigo-600 hover:text-indigo-800 font-semibold flex items-center gap-1">
+      <span>✕</span> Clear search & show all categories
+    </button>
+  </div>
+
+  {% if results %}
+    {% for item in results %}
+    {% set career = item.career %}
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 hover:shadow-md hover:border-indigo-200 transition flex flex-col justify-between">
+      <div>
+        <div class="flex items-start justify-between gap-2 mb-2">
+          <a href="/career/{{ career.id }}" class="font-bold text-base text-slate-900 hover:text-indigo-600 leading-snug">
+            {{ career.name }}
+          </a>
+          <span class="text-[11px] bg-indigo-50 text-indigo-700 font-semibold px-2 py-0.5 rounded-full shrink-0">
+            Score: {{ item.score }}
+          </span>
+        </div>
+
+        {% if career.summary %}
+        <p class="text-xs text-slate-500 line-clamp-2 mb-3">{{ career.summary }}</p>
+        {% endif %}
+
+        <!-- Tags Display with Matched Tags Highlighted -->
+        <div class="flex flex-wrap gap-1.5 mt-2">
+          {% for tag in career.tags[:6] %}
+            {% if tag in item.matched_tags %}
+            <span class="px-2 py-0.5 bg-indigo-600 text-white font-medium rounded-full text-[11px] shadow-sm">
+              #{{ tag }}
+            </span>
+            {% else %}
+            <span class="px-2 py-0.5 bg-slate-100 text-slate-600 rounded-full text-[11px]">
+              #{{ tag }}
+            </span>
+            {% endif %}
+          {% endfor %}
+          {% if career.tags|length > 6 %}
+          <span class="text-[10px] text-slate-400 self-center">+{{ career.tags|length - 6 }} more</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+        <span class="text-slate-400">Class 9–12 Pathway</span>
+        <a href="/career/{{ career.id }}" class="font-semibold text-indigo-600 hover:text-indigo-800">
+          View Roadmaps →
+        </a>
+      </div>
+    </div>
+    {% endfor %}
+  {% else %}
+    <div class="col-span-full text-center py-12 bg-white rounded-2xl border border-dashed border-slate-200">
+      <div class="text-4xl mb-2">🔍</div>
+      <h3 class="font-semibold text-slate-800">No careers found for "{{ query }}"</h3>
+      <p class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
+        Try searching for broader tags like <code>coding</code>, <code>biology</code>, <code>maths</code>, <code>design</code>, or <code>finance</code>.
+      </p>
+      <button onclick="clearSearch()" class="mt-4 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg transition">
+        Reset Search
+      </button>
+    </div>
+  {% endif %}
+{% endif %}

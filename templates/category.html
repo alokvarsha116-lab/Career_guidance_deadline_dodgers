@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}{{ cat.name }}{% endblock %}
+{% block content %}
+<nav class="text-sm text-slate-500 mb-4">
+  <a href="/" class="text-indigo-600">Home</a> › {{ cat.name }}
+</nav>
+<h1 class="text-3xl font-bold mb-2">{{ cat.name }}</h1>
+<div class="flex flex-wrap gap-2 mb-8">
+  {% for t in cat.tags %}
+  <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-sm">#{{ t }}</span>
+  {% endfor %}
+</div>
+
+{% for g in cat.groups %}
+<section class="mb-10">
+  {% if cat.groups|length > 1 %}
+  <h2 class="text-xl font-semibold mb-3">{{ g.name }}</h2>
+  {% endif %}
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+    {% for career in careers_in_group(g) %}
+    <a href="/career/{{ career.id }}"
+       class="bg-white rounded-xl p-4 shadow-sm hover:shadow-md hover:ring-2 hover:ring-indigo-300 transition">
+      {{ career.name }}
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% endfor %}
+{% endblock %}

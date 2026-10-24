@@ -1,0 +1,68 @@
+<!-- Response Bubble -->
+<div class="flex items-start gap-3 mt-6 animate-fade-in">
+  <div class="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm font-bold flex-shrink-0">
+    AI
+  </div>
+  <div class="bg-white p-6 rounded-2xl rounded-tl-none shadow-md border border-indigo-100 w-full space-y-5">
+    
+    <!-- Header -->
+    <div class="border-b pb-3">
+      <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">🎯 5-Dimension Career Evaluation</span>
+      <h2 class="text-xl font-bold text-slate-900 mt-1">{{ evaluation.career_title }}</h2>
+      <div class="flex flex-wrap gap-2 mt-2">
+        <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-100">Class {{ inputs.grade }}</span>
+        <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700">{{ inputs.learning_style }}</span>
+      </div>
+    </div>
+
+    <!-- 1. Recommended Stream -->
+    <div class="bg-indigo-50/70 p-4 rounded-xl border border-indigo-100">
+      <div class="text-xs font-bold text-indigo-900 uppercase">1️⃣ Recommended Stream</div>
+      <div class="text-base font-bold text-indigo-700 mt-0.5">{{ evaluation.stream }}</div>
+    </div>
+
+    <!-- 2. Market Reality & Scope -->
+    <div>
+      <div class="text-xs font-bold text-slate-500 uppercase">2️⃣ Market Reality & Scope</div>
+      <p class="text-sm text-slate-700 mt-0.5">{{ evaluation.market_scope }}</p>
+    </div>
+
+    <!-- 3. Flexibility & Credentials -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+      <div>
+        <span class="font-bold text-slate-800 block">Adaptability:</span>
+        <span class="text-slate-600">{{ evaluation.flexibility_note }}</span>
+      </div>
+      <div>
+        <span class="font-bold text-slate-800 block">Credentials Needed:</span>
+        <span class="text-slate-600">{{ evaluation.credentials }}</span>
+      </div>
+    </div>
+
+    <!-- 4. Lifestyle & Work Environment -->
+    <div>
+      <div class="text-xs font-bold text-slate-500 uppercase">4️⃣ Lifestyle & Work Environment</div>
+      <p class="text-sm text-slate-700 mt-0.5">{{ evaluation.lifestyle_note }}</p>
+    </div>
+
+    <!-- 5. Next Steps -->
+    <div>
+      <div class="text-xs font-bold text-slate-500 uppercase mb-2">5️⃣ Concrete Next Steps for You</div>
+      <ul class="space-y-1.5 text-sm text-slate-700">
+        {% for step in evaluation.next_steps %}
+        <li class="flex items-start gap-2">
+          <span class="text-indigo-600 font-bold">•</span>
+          <span>{{ step }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- Friendly Advice -->
+    <div class="bg-amber-50 p-3.5 rounded-xl border border-amber-200 text-xs text-amber-900 flex items-start gap-2">
+      <span>💡</span>
+      <span><strong>Friendly Advice:</strong> Discuss these insights openly with family members and mentors while staying true to your genuine interests!</span>
+    </div>
+
+  </div>
+</div>

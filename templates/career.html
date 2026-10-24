@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}{{ career.name }}{% endblock %}
+{% block content %}
+<nav class="text-sm text-slate-500 mb-4">
+  <a href="/" class="text-indigo-600">Home</a> ›
+  <a href="/category/{{ cats[0].id }}" class="text-indigo-600">{{ cats[0].name }}</a> ›
+  {{ career.name }}
+</nav>
+
+<h1 class="text-3xl font-bold">{{ career.name }}</h1>
+{% if career.summary %}
+<p class="text-slate-600 mt-2 max-w-2xl">{{ career.summary }}</p>
+{% endif %}
+
+<div class="flex flex-wrap gap-2 my-5">
+  {% for t in career.tags %}
+  <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-sm">#{{ t }}</span>
+  {% endfor %}
+</div>
+
+{% if career.qualifications %}
+<div class="grid md:grid-cols-3 gap-6">
+  <section class="bg-white rounded-xl p-5 shadow">
+    <h2 class="font-semibold mb-2">Qualifications</h2>
+    <ul class="list-disc ml-5 space-y-1">{% for q in career.qualifications %}<li>{{ q }}</li>{% endfor %}</ul>
+  </section>
+  <section class="bg-white rounded-xl p-5 shadow">
+    <h2 class="font-semibold mb-2">Entrance exams</h2>
+    <ul class="list-disc ml-5 space-y-1">{% for e in career.exams %}<li>{{ e }}</li>{% endfor %}</ul>
+  </section>
+  <section class="bg-white rounded-xl p-5 shadow">
+    <h2 class="font-semibold mb-2">Skills to build</h2>
+    <ul class="list-disc ml-5 space-y-1">{% for s in career.skills %}<li>{{ s }}</li>{% endfor %}</ul>
+  </section>
+</div>
+{% if career.verified == false %}
+<p class="text-xs text-slate-500 mt-4">Please verify exams and eligibility on the official website or with a counsellor before deciding.</p>
+{% endif %}
+{% else %}
+<div class="bg-amber-50 border border-amber-200 text-amber-800 rounded-xl p-5">
+  Detailed qualifications for this career are coming soon. Talk to a school counsellor or check the official course websites in the meantime.
+</div>
+{% endif %}
+
+<h2 class="text-lg font-semibold mt-10 mb-3">Also listed under</h2>
+<div class="flex flex-wrap gap-2">
+  {% for c in cats %}
+  <a href="/category/{{ c.id }}" class="px-4 py-2 rounded-lg bg-white shadow-sm hover:ring-2 hover:ring-indigo-300">{{ c.name }}</a>
+  {% endfor %}
+</div>
+{% endblock %}
