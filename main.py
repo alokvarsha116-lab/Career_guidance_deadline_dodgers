@@ -41,8 +41,9 @@ def career(request: Request, career_id: str):
     c = store.get_career(career_id)
     if not c:
         raise HTTPException(404, "Career not found")
-    cats = [store.get_category(i) for i in c["category_ids"]]
-    return templates.TemplateResponse(request, "career.html", {"career": c, "cats": cats})
+    cats = [store.get_category(i) for i in c["category_ids"] if store.get_category(i)]
+    related = store.get_related_careers(career_id, limit=3) if hasattr(store, "get_related_careers") else []
+    return templates.TemplateResponse(request, "career.html", {"career": c, "cats": cats, "related_careers": related})
 
 
 # --- Live Tag & Keyword Search ---

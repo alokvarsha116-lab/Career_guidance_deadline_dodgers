@@ -1,51 +1,598 @@
 {% extends "base.html" %}
-{% block title %}{{ career.name }}{% endblock %}
+{% block title %}{{ career.name }} - Career Guidance{% endblock %}
 {% block content %}
-<nav class="text-sm text-slate-500 mb-4">
-  <a href="/" class="text-indigo-600">Home</a> ›
-  <a href="/category/{{ cats[0].id }}" class="text-indigo-600">{{ cats[0].name }}</a> ›
-  {{ career.name }}
+
+<!-- Breadcrumbs & Quick Category Nav -->
+<nav class="text-sm text-slate-500 mb-6 flex items-center gap-2 flex-wrap">
+  <a href="/" class="text-indigo-600 hover:underline flex items-center gap-1 font-medium">
+    <span>🏠</span> Home
+  </a> 
+  <span class="text-slate-300">/</span>
+  {% if cats and cats|length > 0 %}
+  <a href="/category/{{ cats[0].id }}" class="text-indigo-600 hover:underline font-medium">{{ cats[0].name }}</a>
+  <span class="text-slate-300">/</span>
+  {% endif %}
+  <span class="text-slate-700 font-semibold">{{ career.name }}</span>
 </nav>
 
-<h1 class="text-3xl font-bold">{{ career.name }}</h1>
-{% if career.summary %}
-<p class="text-slate-600 mt-2 max-w-2xl">{{ career.summary }}</p>
+<!-- Hero Section -->
+<div class="bg-gradient-to-br from-indigo-900 via-indigo-800 to-slate-900 rounded-3xl p-6 md:p-10 text-white shadow-xl relative overflow-hidden mb-8">
+  <div class="relative z-10 max-w-3xl">
+    <div class="flex items-center gap-3 mb-3">
+      <span class="px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-indigo-500/30 text-indigo-200 border border-indigo-400/30">
+        Career Pathway Profile
+      </span>
+      {% if career.verified %}
+      <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 flex items-center gap-1">
+        ✓ Verified by Counsellor
+      </span>
+      {% endif %}
+    </div>
+
+    <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight">{{ career.name }}</h1>
+    
+    {% if career.summary %}
+    <p class="text-indigo-100/90 text-base md:text-lg mt-4 leading-relaxed font-normal">
+      {{ career.summary }}
+    </p>
+    {% endif %}
+
+    <!-- Quick Meta Chips -->
+    <div class="flex flex-wrap gap-2 mt-6">
+      {% for t in career.tags %}
+      <span class="px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs backdrop-blur-sm transition border border-white/10">
+        #{{ t }}
+      </span>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Decorative Background Glow -->
+  <div class="absolute -right-10 -bottom-10 w-72 h-72 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
+</div>
+
+<!-- ========================================== -->
+<!-- 1. Interactive Stream Switcher & Fitment Quiz Row -->
+<!-- ========================================== -->
+<div class="grid lg:grid-cols-3 gap-6 mb-8">
+  
+  <!-- Left (2 Cols): Student Stream & Level Toggle -->
+  <div class="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col justify-between">
+    <div>
+      <div class="flex items-center justify-between flex-wrap gap-2 mb-4">
+        <div class="flex items-center gap-2">
+          <span class="p-2 bg-indigo-50 text-indigo-600 rounded-xl text-lg font-bold">🎓</span>
+          <div>
+            <h2 class="font-bold text-slate-800 text-lg">Your Current Academic Stage</h2>
+            <p class="text-xs text-slate-500">Toggle your class to see personalized milestones & advice</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Segmented Buttons -->
+      <div class="flex rounded-xl bg-slate-100 p-1 mb-5 text-sm font-medium">
+        <button onclick="switchStream('class_10')" id="btn-class_10" 
+                class="flex-1 py-2 rounded-lg text-center transition stream-tab-btn bg-white shadow text-indigo-700 font-semibold">
+          Class 9–10 Student
+        </button>
+        <button onclick="switchStream('class_12')" id="btn-class_12" 
+                class="flex-1 py-2 rounded-lg text-center transition stream-tab-btn text-slate-600 hover:text-slate-900">
+          Class 11–12 (Boards/Exams)
+        </button>
+        <button onclick="switchStream('college')" id="btn-college" 
+                class="flex-1 py-2 rounded-lg text-center transition stream-tab-btn text-slate-600 hover:text-slate-900">
+          College / Upskilling
+        </button>
+      </div>
+
+      <!-- Stage Content Panels -->
+      <div class="bg-indigo-50/60 rounded-xl p-4 border border-indigo-100/60">
+        <!-- Class 10 Panel -->
+        <div id="pathway-class_10" class="stream-panel">
+          <div class="font-bold text-indigo-950 text-sm mb-1">
+            {{ career.stream_pathways.class_10.title if career.stream_pathways else "Class 9–10 Milestone" }}
+          </div>
+          <p class="text-slate-700 text-sm leading-relaxed mb-3">
+            {{ career.stream_pathways.class_10.action if career.stream_pathways else "Focus on core concept building." }}
+          </p>
+          <div class="flex items-center gap-2 text-xs font-semibold text-indigo-700">
+            <span>Target Next Step:</span>
+            <span class="text-slate-800 font-medium">
+              {{ career.stream_pathways.class_10.next_step if career.stream_pathways else "Pick aligned higher secondary stream." }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Class 12 Panel -->
+        <div id="pathway-class_12" class="stream-panel hidden">
+          <div class="font-bold text-indigo-950 text-sm mb-1">
+            {{ career.stream_pathways.class_12.title if career.stream_pathways else "Class 11–12 Milestone" }}
+          </div>
+          <p class="text-slate-700 text-sm leading-relaxed mb-3">
+            {{ career.stream_pathways.class_12.action if career.stream_pathways else "Prepare for key entrance tests and boards." }}
+          </p>
+          <div class="flex items-center gap-2 text-xs font-semibold text-indigo-700">
+            <span>Target Next Step:</span>
+            <span class="text-slate-800 font-medium">
+              {{ career.stream_pathways.class_12.next_step if career.stream_pathways else "Target top universities with strong placement records." }}
+            </span>
+          </div>
+        </div>
+
+        <!-- College Panel -->
+        <div id="pathway-college" class="stream-panel hidden">
+          <div class="font-bold text-indigo-950 text-sm mb-1">
+            {{ career.stream_pathways.college.title if career.stream_pathways else "College & Career Launch" }}
+          </div>
+          <p class="text-slate-700 text-sm leading-relaxed mb-3">
+            {{ career.stream_pathways.college.action if career.stream_pathways else "Complete projects, internships, and build an active portfolio." }}
+          </p>
+          <div class="flex items-center gap-2 text-xs font-semibold text-indigo-700">
+            <span>Target Next Step:</span>
+            <span class="text-slate-800 font-medium">
+              {{ career.stream_pathways.college.next_step if career.stream_pathways else "Prepare for campus recruitments and domain certifications." }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+      <span>💡 Customized based on Indian curriculum & entrance timelines</span>
+      <a href="/chat" class="text-indigo-600 font-semibold hover:underline flex items-center gap-1">
+        Ask AI Counselor →
+      </a>
+    </div>
+  </div>
+
+  <!-- Right (1 Col): Interactive 3-Question Fitment Score Quiz -->
+  <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-6 shadow-sm border border-indigo-100/70">
+    <div class="flex items-center gap-2 mb-3">
+      <span class="p-2 bg-white shadow-sm text-purple-600 rounded-xl text-lg">⚡</span>
+      <div>
+        <h2 class="font-bold text-slate-800 text-base">Quick Fitment Score</h2>
+        <p class="text-xs text-slate-500">Are you a good match for this role?</p>
+      </div>
+    </div>
+
+    <!-- Questions -->
+    <div class="space-y-3 my-4 text-xs">
+      <div>
+        <label class="font-semibold text-slate-700 block mb-1">1. Do you enjoy technical problem-solving & logical tasks?</label>
+        <div class="flex gap-2">
+          <button onclick="setQuizAnswer(0, 1)" class="quiz-btn-0 flex-1 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-indigo-50 font-medium text-slate-700 transition">Yes</button>
+          <button onclick="setQuizAnswer(0, 0)" class="quiz-btn-0 flex-1 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 font-medium text-slate-500 transition">Somewhat</button>
+        </div>
+      </div>
+
+      <div>
+        <label class="font-semibold text-slate-700 block mb-1">2. Comfortable with continuous self-learning & evolving tools?</label>
+        <div class="flex gap-2">
+          <button onclick="setQuizAnswer(1, 1)" class="quiz-btn-1 flex-1 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-indigo-50 font-medium text-slate-700 transition">Yes</button>
+          <button onclick="setQuizAnswer(1, 0)" class="quiz-btn-1 flex-1 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 font-medium text-slate-500 transition">Not sure</button>
+        </div>
+      </div>
+
+      <div>
+        <label class="font-semibold text-slate-700 block mb-1">3. Does the daily lifestyle & screen/desk time work for you?</label>
+        <div class="flex gap-2">
+          <button onclick="setQuizAnswer(2, 1)" class="quiz-btn-2 flex-1 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-indigo-50 font-medium text-slate-700 transition">Yes</button>
+          <button onclick="setQuizAnswer(2, 0)" class="quiz-btn-2 flex-1 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 font-medium text-slate-500 transition">Needs balance</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Match Result Meter -->
+    <div id="quiz-result-box" class="bg-white rounded-xl p-3 border border-purple-100 shadow-sm text-center">
+      <div class="text-xs text-slate-500 mb-1">Estimated Fitment</div>
+      <div id="quiz-score-val" class="text-2xl font-black text-indigo-600">82% Match</div>
+      <div id="quiz-score-text" class="text-[11px] text-slate-600 font-medium mt-0.5">High alignment with this career path!</div>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ========================================== -->
+<!-- 2. Core Foundation: Qualifications, Exams, Skills -->
+<!-- ========================================== -->
+<div class="mb-10">
+  <div class="flex items-center gap-2 mb-4">
+    <span class="p-1.5 bg-indigo-100 text-indigo-700 rounded-lg text-sm">📚</span>
+    <h2 class="text-xl font-bold text-slate-800">Academic Roadmap & Skills</h2>
+  </div>
+
+  <div class="grid md:grid-cols-3 gap-6">
+    <!-- Qualifications -->
+    <section class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md transition">
+      <div>
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-indigo-600 font-bold text-lg">🎓</span>
+          <h3 class="font-bold text-slate-800">Degrees & Qualifications</h3>
+        </div>
+        <ul class="space-y-2.5 text-sm text-slate-600">
+          {% for q in career.qualifications %}
+          <li class="flex items-start gap-2">
+            <span class="text-indigo-500 font-bold text-base leading-none">•</span>
+            <span>{{ q }}</span>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </section>
+
+    <!-- Entrance Exams -->
+    <section class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md transition">
+      <div>
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-indigo-600 font-bold text-lg">📝</span>
+          <h3 class="font-bold text-slate-800">Key Entrance Exams</h3>
+        </div>
+        <ul class="space-y-2.5 text-sm text-slate-600">
+          {% for e in career.exams %}
+          <li class="flex items-start gap-2">
+            <span class="text-indigo-500 font-bold text-base leading-none">•</span>
+            <span class="font-medium text-slate-800">{{ e }}</span>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="mt-4 pt-3 border-t border-slate-50 text-[11px] text-slate-400">
+        Always check official state & university portal cutoffs.
+      </div>
+    </section>
+
+    <!-- Skills to Build -->
+    <section class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md transition">
+      <div>
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-indigo-600 font-bold text-lg">🛠️</span>
+          <h3 class="font-bold text-slate-800">Essential Skills to Build</h3>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          {% for s in career.skills %}
+          <span class="px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200/60 text-slate-700 text-xs font-semibold">
+            {{ s }}
+          </span>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+
+<!-- ========================================== -->
+<!-- 3. Specialized Job Roles & Career Ladder (Feature 1) -->
+<!-- ========================================== -->
+<div class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-100 mb-8">
+  <div class="flex items-center justify-between flex-wrap gap-2 mb-6">
+    <div class="flex items-center gap-2">
+      <span class="p-2 bg-indigo-50 text-indigo-600 rounded-xl text-lg font-bold">🚀</span>
+      <div>
+        <h2 class="text-xl font-bold text-slate-800">Job Roles & Growth Pathway</h2>
+        <p class="text-xs text-slate-500">What you can specialize in and how your career advances over time</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Specialized Job Roles Chips -->
+  <div class="mb-8">
+    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Specialized Job Roles In This Field</h3>
+    <div class="flex flex-wrap gap-2">
+      {% for role in career.job_roles %}
+      <div class="px-3.5 py-2 rounded-xl bg-indigo-50/70 border border-indigo-100 text-indigo-900 text-xs font-semibold flex items-center gap-1.5">
+        <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
+        {{ role }}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Career Ladder Progression -->
+  <div>
+    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Typical Career Hierarchy & Milestones</h3>
+    <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+      {% for stage in career.career_ladder %}
+      <div class="p-4 rounded-xl bg-slate-50 border border-slate-100 relative flex flex-col justify-between">
+        <div>
+          <span class="text-[10px] font-bold uppercase text-indigo-600 tracking-wider">Step {{ loop.index }}</span>
+          <div class="text-xs font-bold text-slate-800 mt-1 leading-snug">{{ stage }}</div>
+        </div>
+        {% if not loop.last %}
+        <div class="hidden lg:block absolute -right-3 top-1/2 -translate-y-1/2 text-slate-300 font-bold z-10">→</div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+
+<!-- ========================================== -->
+<!-- 4. Day-in-the-Life & Work Dynamics (Feature 2) -->
+<!-- ========================================== -->
+<div class="grid md:grid-cols-2 gap-6 mb-8">
+  <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+    <div class="flex items-center gap-2 mb-3">
+      <span class="p-2 bg-amber-50 text-amber-600 rounded-xl text-lg font-bold">☕</span>
+      <div>
+        <h3 class="font-bold text-slate-800 text-base">A Typical Workday</h3>
+        <p class="text-xs text-slate-500">Real tasks, collaboration, and daily schedule</p>
+      </div>
+    </div>
+    <p class="text-sm text-slate-600 leading-relaxed bg-amber-50/40 p-4 rounded-xl border border-amber-100/50">
+      {{ career.typical_day }}
+    </p>
+  </div>
+
+  <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+    <div class="flex items-center gap-2 mb-3">
+      <span class="p-2 bg-blue-50 text-blue-600 rounded-xl text-lg font-bold">⚖️</span>
+      <div>
+        <h3 class="font-bold text-slate-800 text-base">Work Dynamics & Lifestyle</h3>
+        <p class="text-xs text-slate-500">Flexibility, screen hours, and stress levels</p>
+      </div>
+    </div>
+    <p class="text-sm text-slate-600 leading-relaxed bg-blue-50/40 p-4 rounded-xl border border-blue-100/50">
+      {{ career.work_dynamics }}
+    </p>
+  </div>
+</div>
+
+
+<!-- ========================================== -->
+<!-- 5. Practical Exposure: How to Start Now (Feature 3) -->
+<!-- ========================================== -->
+<div class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-100 mb-8">
+  <div class="flex items-center gap-2 mb-6">
+    <span class="p-2 bg-emerald-50 text-emerald-600 rounded-xl text-lg font-bold">💻</span>
+    <div>
+      <h2 class="text-xl font-bold text-slate-800">Practical Exposure: Start Building Today</h2>
+      <p class="text-xs text-slate-500">Actionable steps for students in Classes 9–12 and college to test their interest</p>
+    </div>
+  </div>
+
+  <div class="grid md:grid-cols-3 gap-6">
+    <!-- Beginner Projects -->
+    <div class="bg-slate-50 rounded-xl p-5 border border-slate-100">
+      <h3 class="font-bold text-slate-800 text-sm mb-3 flex items-center gap-1.5">
+        <span>🚀</span> Beginner Projects
+      </h3>
+      <ul class="space-y-2 text-xs text-slate-600">
+        {% for project in career.beginner_projects %}
+        <li class="flex items-start gap-2">
+          <span class="text-emerald-500 font-bold">•</span>
+          <span>{{ project }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- Platforms to Learn -->
+    <div class="bg-slate-50 rounded-xl p-5 border border-slate-100">
+      <h3 class="font-bold text-slate-800 text-sm mb-3 flex items-center gap-1.5">
+        <span>📖</span> Platforms & Resources
+      </h3>
+      <ul class="space-y-2 text-xs text-slate-600">
+        {% for platform in career.learn_platforms %}
+        <li class="flex items-start gap-2">
+          <span class="text-indigo-500 font-bold">•</span>
+          <span>{{ platform }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- Hackathons & Communities -->
+    <div class="bg-slate-50 rounded-xl p-5 border border-slate-100">
+      <h3 class="font-bold text-slate-800 text-sm mb-3 flex items-center gap-1.5">
+        <span>🏆</span> Hackathons & Communities
+      </h3>
+      <ul class="space-y-2 text-xs text-slate-600">
+        {% for hackathon in career.hackathons %}
+        <li class="flex items-start gap-2">
+          <span class="text-amber-500 font-bold">•</span>
+          <span>{{ hackathon }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ========================================== -->
+<!-- 6. Top Recruiters & Future Outlook (Feature 4) -->
+<!-- ========================================== -->
+<div class="grid md:grid-cols-2 gap-6 mb-8">
+  <!-- Recruiters -->
+  <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+    <div class="flex items-center gap-2 mb-4">
+      <span class="p-2 bg-indigo-50 text-indigo-600 rounded-xl text-lg font-bold">🏢</span>
+      <div>
+        <h3 class="font-bold text-slate-800 text-base">Top Recruiters & Company Categories</h3>
+        <p class="text-xs text-slate-500">Where professionals in this field build their careers</p>
+      </div>
+    </div>
+    <ul class="space-y-2 text-sm text-slate-600">
+      {% for company in career.company_types %}
+      <li class="flex items-start gap-2 p-2 rounded-lg bg-slate-50 border border-slate-100/60">
+        <span class="text-indigo-500 font-bold">✓</span>
+        <span>{{ company }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <!-- Future Outlook & AI Risk/Opportunity -->
+  <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+    <div class="flex items-center gap-2 mb-4">
+      <span class="p-2 bg-purple-50 text-purple-600 rounded-xl text-lg font-bold">🔮</span>
+      <div>
+        <h3 class="font-bold text-slate-800 text-base">5–10 Year Industry & AI Outlook</h3>
+        <p class="text-xs text-slate-500">How automation, AI, and global trends shape this career</p>
+      </div>
+    </div>
+    <div class="bg-purple-50/40 p-4 rounded-xl border border-purple-100/50 text-sm text-slate-700 leading-relaxed">
+      {{ career.future_outlook }}
+    </div>
+  </div>
+</div>
+
+
+<!-- ========================================== -->
+<!-- 7. Cost of Education vs. Expected ROI (Feature 5) -->
+<!-- ========================================== -->
+<div class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-100 mb-8">
+  <div class="flex items-center gap-2 mb-6">
+    <span class="p-2 bg-emerald-50 text-emerald-600 rounded-xl text-lg font-bold">💰</span>
+    <div>
+      <h2 class="text-xl font-bold text-slate-800">Cost of Education vs. Expected ROI</h2>
+      <p class="text-xs text-slate-500">Transparent financial breakdown to help students and parents plan feasibility</p>
+    </div>
+  </div>
+
+  <!-- Degree Cost Tiers -->
+  <div class="grid md:grid-cols-3 gap-6 mb-6">
+    {% for tier in career.degree_costs %}
+    <div class="p-5 rounded-2xl border border-slate-100 bg-slate-50/50 flex flex-col justify-between">
+      <div>
+        <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">{{ tier.tier }}</div>
+        <div class="text-2xl font-black text-slate-800 my-2">{{ tier.cost }}</div>
+        <p class="text-xs text-slate-600 leading-relaxed">{{ tier.note }}</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- ROI Timeline Banner -->
+  <div class="bg-emerald-50/70 border border-emerald-200/70 rounded-xl p-4 flex items-start gap-3">
+    <span class="text-xl">📈</span>
+    <div>
+      <div class="text-xs font-bold text-emerald-900 uppercase tracking-wider">Tuition Recovery & ROI Timeline</div>
+      <div class="text-sm text-emerald-800 font-medium mt-0.5 leading-relaxed">
+        {{ career.roi_timeline }}
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ========================================== -->
+<!-- 8. Side-by-Side Alternative Careers Comparison Widget -->
+<!-- ========================================== -->
+{% if related_careers and related_careers|length > 0 %}
+<div class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-100 mb-8">
+  <div class="flex items-center justify-between flex-wrap gap-2 mb-6">
+    <div class="flex items-center gap-2">
+      <span class="p-2 bg-indigo-50 text-indigo-600 rounded-xl text-lg font-bold">🔄</span>
+      <div>
+        <h2 class="text-xl font-bold text-slate-800">Compare with Alternative Careers</h2>
+        <p class="text-xs text-slate-500">Explore closely related paths to understand differences in skills and direction</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid md:grid-cols-3 gap-6">
+    {% for alt in related_careers %}
+    <div class="p-5 rounded-2xl border border-slate-100 bg-slate-50/60 hover:bg-white hover:shadow-md transition flex flex-col justify-between">
+      <div>
+        <div class="text-xs font-bold text-indigo-600 mb-1">Alternative Option</div>
+        <h3 class="font-bold text-slate-900 text-base mb-2">{{ alt.name }}</h3>
+        <p class="text-xs text-slate-600 line-clamp-2 mb-3">
+          {{ alt.summary or "Explore qualifications and pathways for " ~ alt.name ~ "." }}
+        </p>
+
+        <div class="text-[11px] text-slate-500 mb-3 space-y-1">
+          <div><strong class="text-slate-700">Top Exam:</strong> {{ alt.exams[0] if alt.exams else "Merit / CET" }}</div>
+          <div><strong class="text-slate-700">Work Style:</strong> {{ alt.work_dynamics.split('.')[0] if alt.work_dynamics else "Hybrid / Collaborative" }}</div>
+        </div>
+      </div>
+
+      <a href="/career/{{ alt.id }}" class="mt-2 text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center justify-between p-2 rounded-xl bg-white border border-slate-200/60 shadow-sm">
+        <span>View Full Comparison</span>
+        <span>→</span>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+</div>
 {% endif %}
 
-<div class="flex flex-wrap gap-2 my-5">
-  {% for t in career.tags %}
-  <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-sm">#{{ t }}</span>
-  {% endfor %}
+
+<!-- Categories Footprint -->
+<div class="bg-slate-100/60 rounded-2xl p-6 border border-slate-200/60">
+  <h2 class="text-sm font-bold text-slate-600 uppercase tracking-wider mb-3">Listed In Categories</h2>
+  <div class="flex flex-wrap gap-2">
+    {% for c in cats %}
+    <a href="/category/{{ c.id }}" class="px-4 py-2 rounded-xl bg-white text-slate-700 font-semibold text-xs shadow-sm hover:ring-2 hover:ring-indigo-400 hover:text-indigo-600 transition">
+      📁 {{ c.name }}
+    </a>
+    {% endfor %}
+  </div>
 </div>
 
-{% if career.qualifications %}
-<div class="grid md:grid-cols-3 gap-6">
-  <section class="bg-white rounded-xl p-5 shadow">
-    <h2 class="font-semibold mb-2">Qualifications</h2>
-    <ul class="list-disc ml-5 space-y-1">{% for q in career.qualifications %}<li>{{ q }}</li>{% endfor %}</ul>
-  </section>
-  <section class="bg-white rounded-xl p-5 shadow">
-    <h2 class="font-semibold mb-2">Entrance exams</h2>
-    <ul class="list-disc ml-5 space-y-1">{% for e in career.exams %}<li>{{ e }}</li>{% endfor %}</ul>
-  </section>
-  <section class="bg-white rounded-xl p-5 shadow">
-    <h2 class="font-semibold mb-2">Skills to build</h2>
-    <ul class="list-disc ml-5 space-y-1">{% for s in career.skills %}<li>{{ s }}</li>{% endfor %}</ul>
-  </section>
-</div>
-{% if career.verified == false %}
-<p class="text-xs text-slate-500 mt-4">Please verify exams and eligibility on the official website or with a counsellor before deciding.</p>
-{% endif %}
-{% else %}
-<div class="bg-amber-50 border border-amber-200 text-amber-800 rounded-xl p-5">
-  Detailed qualifications for this career are coming soon. Talk to a school counsellor or check the official course websites in the meantime.
-</div>
-{% endif %}
+<!-- ========================================== -->
+<!-- Interactive JavaScript Logic -->
+<!-- ========================================== -->
+<script>
+  // Stream & Status Switcher
+  function switchStream(stage) {
+    document.querySelectorAll('.stream-tab-btn').forEach(btn => {
+      btn.classList.remove('bg-white', 'shadow', 'text-indigo-700', 'font-semibold');
+      btn.classList.add('text-slate-600');
+    });
 
-<h2 class="text-lg font-semibold mt-10 mb-3">Also listed under</h2>
-<div class="flex flex-wrap gap-2">
-  {% for c in cats %}
-  <a href="/category/{{ c.id }}" class="px-4 py-2 rounded-lg bg-white shadow-sm hover:ring-2 hover:ring-indigo-300">{{ c.name }}</a>
-  {% endfor %}
-</div>
+    const activeBtn = document.getElementById('btn-' + stage);
+    if (activeBtn) {
+      activeBtn.classList.add('bg-white', 'shadow', 'text-indigo-700', 'font-semibold');
+      activeBtn.classList.remove('text-slate-600');
+    }
+
+    document.querySelectorAll('.stream-panel').forEach(panel => {
+      panel.classList.add('hidden');
+    });
+
+    const activePanel = document.getElementById('pathway-' + stage);
+    if (activePanel) {
+      activePanel.classList.remove('hidden');
+    }
+  }
+
+  // Quick Fitment Quiz Calculator
+  let answers = [1, 1, 0];
+
+  function setQuizAnswer(qIdx, val) {
+    answers[qIdx] = val;
+    
+    // Highlight selected button
+    const buttons = document.querySelectorAll('.quiz-btn-' + qIdx);
+    buttons.forEach((btn, idx) => {
+      if ((val === 1 && idx === 0) || (val === 0 && idx === 1)) {
+        btn.classList.add('bg-indigo-600', 'text-white', 'border-indigo-600');
+        btn.classList.remove('bg-white', 'text-slate-700', 'text-slate-500');
+      } else {
+        btn.classList.remove('bg-indigo-600', 'text-white', 'border-indigo-600');
+        btn.classList.add('bg-white', 'text-slate-700');
+      }
+    });
+
+    // Calculate score
+    const total = answers.reduce((a, b) => a + b, 0);
+    let pct = 60 + (total * 13);
+    if (pct > 96) pct = 96;
+
+    document.getElementById('quiz-score-val').innerText = pct + '% Match';
+    
+    let text = "Moderate fit. Explore prerequisite skills and introductory courses.";
+    if (pct >= 85) {
+      text = "Excellent match! Your preferences strongly align with this career's day-to-day work.";
+    } else if (pct >= 75) {
+      text = "Strong potential fit! Review the beginner projects to confirm your interest.";
+    }
+    document.getElementById('quiz-score-text').innerText = text;
+  }
+</script>
+
 {% endblock %}
